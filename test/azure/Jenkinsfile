@@ -37,6 +37,7 @@ node {
 		def config = getConfig("jenk8s-${env.GIT_COMMIT}", ignitionTag, azureMachinePassword)
 		writeFile(file: '.config.json', text: config)
 		writeFile(file: 'config.json', text: config)
+		echo config
 		//dir('phase1/azure') {
 		//	sh('bash ./do deploy')
 		//}
@@ -44,7 +45,6 @@ node {
 	}
 	archiveArtifacts artifacts: 'config.json', fingerprint: true
 	archiveArtifacts artifacts: 'phase1/azure/.tmp/kubeconfig.json', fingerprint: true
-	echo config
 
 
 	stage 'test cluster'
