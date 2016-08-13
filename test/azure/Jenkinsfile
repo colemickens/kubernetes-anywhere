@@ -38,48 +38,46 @@ node {
 			$class: 'UsernamePasswordMultiBinding',
 			credentialsId: 'azure_service_principal',
 			usernameVariable: 'AZURE_CLIENT_ID',
-			passwordVariable: 'AZURE_CLIENT_SECRET']])
-	{
+			passwordVariable: 'AZURE_CLIENT_SECRET']]) {
 
-		stage "deploy cluster"
-		def config = getConfig()
-		writeFile(file: '.config.json', text: config)
-		writeFile(file: 'config.json', text: config)
-		archiveArtifacts artifacts: 'config.json', fingerprint: true
+			stage "deploy cluster"
+			def config = getConfig()
+			writeFile(file: '.config.json', text: config)
+			writeFile(file: 'config.json', text: config)
+			archiveArtifacts artifacts: 'config.json', fingerprint: true
 
-		//*sh("cd ./phase1/azure && ./do deploy")*/
-		sh("""set -x; \
-		cat <<-EOF | make deploy\n
-				${clusterName}
-				azure\n\n\n\n\n\n\n
-				westus2\n
-				${azureMachinePassword}
-				${tenantId}
-				${subscriptionId}
-				${env.AZURE_CLIENT_ID}
-				${env.AZURE_CLIENT_SECRET}
-				${ignitionTag}
-				gcr.io/google_containers
-				v1.4.0-alpha.2\n\n\n\n\n
-		EOF""")
+			sh("""set -x; \
+			cat <<-EOF | make deploy\n
+					${clusterName}
+					azure\n\n\n\n\n\n\n
+					westus2\n
+					${azureMachinePassword}
+					${tenantId}
+					${subscriptionId}
+					${env.AZURE_CLIENT_ID}
+					${env.AZURE_CLIENT_SECRET}
+					${ignitionTag}
+					gcr.io/google_containers
+					v1.4.0-alpha.2\n\n\n\n\n
+			EOF""")
 
-		sh("cp ./phase1/azure/.tmp/kubeconfig.json ./kubeconfig.json")
-		archiveArtifacts artifacts: 'kubeconfig.json', fingerprint: true
+			sh("cp ./phase1/azure/.tmp/kubeconfig.json ./kubeconfig.json")
+			archiveArtifacts artifacts: 'kubeconfig.json', fingerprint: true
 
 
-		stage 'test cluster'
-		//input 'test cluster?'
-		//withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
-		//	echo 'make conformtest'
-			//make conformtest
-		//}
+			stage 'test cluster'
+			//input 'test cluster?'
+			withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
+				echo 'make conformtest'
+				// make conformtest
+			}
 
 
-		stage 'destroy cluster'
-		input 'destroy cluster?'
-		withEnv(["FORCE_DESTROY=true"]) {
-			sh("cd ./phase1/azure && ./do destroy")
-		}
+			stage 'destroy cluster'
+			input 'destroy cluster?'
+			withEnv(["FORCE_DESTROY=true"]) {
+				sh("cd ./phase1/azure && ./do destroy")
+			}
 		}
 	}
 }
