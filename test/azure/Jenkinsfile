@@ -6,6 +6,7 @@ import static java.util.UUID.randomUUID
 // - tenantId
 // - subscriptionId
 // - destroyCluster
+// - useEphemeralDrive
 // TODO(colemickens): paramterize the subscription, tenant id, etc
 
 // TODO(general): this could be broken out so that the config step could be parameterized...
@@ -60,13 +61,9 @@ node {
 			passwordVariable: 'AZURE_CLIENT_SECRET']]) {
 
 			stage "deploy cluster"
-			def config = getConfig()
-			writeFile(file: '.config.json', text: config)
-			writeFile(file: 'config.json', text: config)
-			archiveArtifacts artifacts: 'config.json', fingerprint: true
 
 			sh("""set -x; \
-			cat <<-EOF | make deploy\n
+			cat <<-EOF | make config\n
 					${clusterName}
 					azure\n\n\n\n\n\n\n
 					westus2\n
@@ -77,8 +74,13 @@ node {
 					${env.AZURE_CLIENT_SECRET}
 					${ignitionTag}
 					gcr.io/google_containers
-					${kubernetesVersion}\n\n\n\n\n
+					${kubernetesVersion}\n\n\n\n
 			EOF""")
+
+			sh('cp .config.json config.json'
+			archiveArtifacts artifacts: 'config.json', fingerprint: true
+
+			sh("make deploy")
 
 			sh("cp ./phase1/azure/.tmp/kubeconfig.json ./kubeconfig.json")
 			archiveArtifacts artifacts: 'kubeconfig.json', fingerprint: true
