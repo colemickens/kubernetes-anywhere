@@ -21,13 +21,13 @@ node {
 
 	stage 'build phase2'
 	dir('phase2/ignition') {
-		def ignitionImg = docker.build(ignitionTag, '--pull')
+		def ignitionImg = docker.build(ignitionTag, '--pull .')
 		ignitionImg.push()
 	}
 
 
 	stage 'build kubernetes-anywhere'
-	def kanyImg = docker.build(kanyTag, '--pull')
+	def kanyImg = docker.build(kanyTag, '--pull .')
 	kanyImg.push()
 
 
