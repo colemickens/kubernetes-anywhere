@@ -90,7 +90,7 @@ def getConfig(clusterName, ignitionTag, azureMachinePassword) {
 		def configTemplate = readFile('test/azure/config.json.template')
 		return sh (
 			//script: """echo "${configTemplate}" "${configTest}" | jq -r -s add""",
-			script: "jq -s '.[0] * .[1]' testconfig.json ${configTemplatePath} > config.json"
+			script: "jq -s '.[0] * .[1]' testconfig.json ${configTemplatePath} > config.json",
 			returnStdout: true
 		).trim()
 	}
