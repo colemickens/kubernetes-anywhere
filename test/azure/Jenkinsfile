@@ -49,11 +49,10 @@ node {
 				
 				${clusterName}
 				azure
-				\n \
-				\n \
-				\n \
-				\n \
-				\n \
+
+
+
+
 				\n \
 				westus2\n \
 				\n \
