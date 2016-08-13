@@ -16,7 +16,7 @@ node {
 	sh 'git rev-parse --short HEAD > commit'
 	env.GIT_COMMIT = readFile('commit').trim()
 
-	if clusterName = "" {
+	if (clusterName = "") {
 		clusterName = "k8s-anywhere-${env.GIT_COMMIT}"
 	}
 	def kanyTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}"
