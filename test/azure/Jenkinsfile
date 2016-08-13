@@ -47,7 +47,7 @@ node {
 		//*sh("cd ./phase1/azure && ./do deploy")*/
 		sh("""cat <<-EOF | make do deploy \
 				${clusterName} \
-				${numNodes} \
+				\
 				azure \
 				\
 				\
