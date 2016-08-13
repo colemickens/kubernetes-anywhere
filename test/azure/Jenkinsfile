@@ -33,10 +33,10 @@ node {
 
 
 	stage "deploy cluster"
+	kanyImg.inside() {
 	def config = getConfig("jenk8s-${env.GIT_COMMIT}-${env.BUILD_NUMBER}", ignitionTag, azureMachinePassword)
 	writeFile(config, '.config.json')
 	writeFile(config, 'config.json')
-	kanyImg.inside() {
 		//sh('make deploy')
 		// TODO: make 'make deploy wait, then install addons automatically
 		echo 'make deploy'
