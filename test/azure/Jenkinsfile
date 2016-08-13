@@ -34,9 +34,10 @@ node {
 
 	stage "deploy cluster"
 	kanyImg.inside() {
-		dir('phase1/azure') {
-			sh('bash ./do deploy')
-		}
+		//dir('phase1/azure') {
+		//	sh('bash ./do deploy')
+		//}
+		sh('cd ./phase1/azure && ./do deploy')
 	}
 	archiveArtifacts artifacts: 'config.json', fingerprint: true
 	archiveArtifacts artifacts: 'phase1/azure/.tmp/kubeconfig.json', fingerprint: true
