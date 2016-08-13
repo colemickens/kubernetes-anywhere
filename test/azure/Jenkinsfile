@@ -12,6 +12,7 @@ def azureMachinePassword = 'P@ssw0rdRes3t'
 def dockerRepo = 'docker.io/colemickens'
 
 node {
+	sh('ls ./phase1/azure/.tmp')
 	checkout scm
 
 	sh 'git rev-parse HEAD > commit'
