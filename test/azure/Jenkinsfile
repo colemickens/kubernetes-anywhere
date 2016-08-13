@@ -63,7 +63,7 @@ node {
 			stage "deploy cluster"
 
 			sh("""set -x; \
-			cat <<-EOF | make config\n
+			cat <<-EOF | make .config.json\n
 					${clusterName}
 					azure\n\n\n\n\n\n\n
 					westus2\n
