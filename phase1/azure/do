@@ -9,6 +9,7 @@ cd "${BASH_SOURCE%/*}"
 
 gen() {
   mkdir -p .tmp/
+  ls -al .tmp
   jsonnet -J ../../ --multi .tmp/ all.jsonnet
 }
 
