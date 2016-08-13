@@ -32,6 +32,13 @@ node {
 	def ignitionTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
 	env.IGNITION_TAG = ignitionTag
 
+	stage 'build hyperkube'
+	// shallow clone master
+	// export KUBE_DOCKER_REGISTRY=docker.io
+	// export KUBE_DOCKER_OWNER=colemickens
+	// export KUBE_DOCKER_VERSION=${BUILD_NUMBER}.${GIT_COMMMIT}
+	// ./dev-push-hyperkube.sh
+
 	stage 'build phase2'
 	dir('phase2/ignition') {
 		def ignitionImg = docker.build(ignitionTag, '--pull .')
