@@ -16,7 +16,9 @@ node {
 	sh 'git rev-parse --short HEAD > commit'
 	env.GIT_COMMIT = readFile('commit').trim()
 
-	def clusterName = "k8s-anywhere-${env.GIT_COMMIT}"
+	if clusterName = "" {
+		clusterName = "k8s-anywhere-${env.GIT_COMMIT}"
+	}
 	def kanyTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}"
 	def ignitionTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}"
 
@@ -41,7 +43,7 @@ node {
 
 		// intentionally suppressing some of the terraform build output
 		// because it's impossible to really hide the sp client_secret
-		sh("make do deploy")
+		sh("cd ./phase1/azure && ./do deploy")
 		sh("cp ./phase1/azure/.tmp/kubeconfig.json ./kubeconfig.json")
 		archiveArtifacts artifacts: 'kubeconfig.json', fingerprint: true
 
@@ -57,7 +59,7 @@ node {
 
 		stage 'deploy cluster'
 		input 'destroy cluster?'
-		sh("make do destroy")
+		sh("cd ./phase1/azure && ./do destroy")
 	}
 }
 
