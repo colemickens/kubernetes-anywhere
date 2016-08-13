@@ -45,34 +45,16 @@ node {
 
 		//*sh("cd ./phase1/azure && ./do deploy")*/
 		sh("""set -x; \
-		cat <<-EOF | make deploy
-				
+		cat <<-EOF | make deploy\n
 				${clusterName}
-				azure
-
-
-
-
-
-
-
-				westus2
-
+				azure\n\n\n\n\n\n\n
+				westus2\n
 				${azureMachinePassword}
 				${tenantId}
 				${subscriptionId}
 				${env.AZURE_CLIENT_ID}
 				${env.AZURE_CLIENT_SECRET}
-				${ignitionTag}
-				
-
-
-
-
-
-
-
-
+				${ignitionTag}\n\n\n\n\n
 		EOF""")
 
 		sh("cp ./phase1/azure/.tmp/kubeconfig.json ./kubeconfig.json")
