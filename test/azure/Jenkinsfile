@@ -1,7 +1,7 @@
 def kanyTag = 'docker.io/colemickens/k8s-ignition:${}'
 def ignitionTag = 'docker.io/colemickens/k8s-ignition:${BHASFASDF}'
 
-def cwd = () => {
+def cwd = { ->
     sh 'pwd > pwd.current'
     return readFile('pwd.current').trim()
 }
