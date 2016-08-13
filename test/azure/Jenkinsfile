@@ -33,7 +33,7 @@ node {
 
 
 	stage "deploy cluster"
-	def config = getConfig "jenk8s-${env.GIT_COMMIT}"
+	def config = getConfig "jenk8s-${env.GIT_COMMIT}" ignitionTag azureMachinePassword
 	writeFile(config, '.config.json')
 	writeFile(config, 'config.json')
 	kanyImg.inside() {
@@ -68,7 +68,7 @@ def cwd = { ->
     return readFile('pwd.current').trim()
 }
 
-def getConfig(clusterName) {
+def getConfig(clusterName, ignitionTag, azureMachinePassword) {
 	uuid = randomUUID() as String
 
 	withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'azure_service_principal',
@@ -83,6 +83,9 @@ def getConfig(clusterName) {
 						"client_secret": "${env.AZURE_CLIENT_SECRET}"
 					}
 				},
+				"phase2": {
+					"installer_container": "${ignitionTag}"
+				}
 			}
 		""".stripIndent().trim()
 
