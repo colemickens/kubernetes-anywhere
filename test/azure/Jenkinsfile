@@ -34,9 +34,7 @@ node {
 
 	stage "deploy cluster"
 	kanyImg.inside() {
-		//sh('make deploy')
-		// TODO: make 'make deploy wait, then install addons automatically
-		echo 'make deploy'
+		sh('make deploy')
 	}
 	archiveArtifacts artifacts: 'config.json', fingerprint: true
 	archiveArtifacts artifacts: 'phase1/azure/.tmp/kubeconfig.json', fingerprint: true
