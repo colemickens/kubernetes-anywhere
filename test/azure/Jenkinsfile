@@ -41,20 +41,17 @@ node {
 		writeFile(file: 'config.json', text: config)
 		archiveArtifacts artifacts: 'config.json', fingerprint: true
 
-		// intentionally suppressing some of the terraform build output
-		// because it's impossible to really hide the sp client_secret
 		sh("cd ./phase1/azure && ./do deploy")
 		sh("cp ./phase1/azure/.tmp/kubeconfig.json ./kubeconfig.json")
 		archiveArtifacts artifacts: 'kubeconfig.json', fingerprint: true
 
 
-		stage "deploy cluster"
 		stage 'test cluster'
-		input 'test cluster?'
-		withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
-			echo 'make conformtest'
+		//input 'test cluster?'
+		//withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
+		//	echo 'make conformtest'
 			//make conformtest
-		}
+		//}
 
 
 		stage 'deploy cluster'
