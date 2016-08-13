@@ -46,7 +46,8 @@ node {
 		archiveArtifacts artifacts: 'config.json', fingerprint: true
 
 		//*sh("cd ./phase1/azure && ./do deploy")*/
-		sh("""cat <<-EOF | make deploy \
+		sh("""set -x; \
+		cat <<-EOF | make deploy \
 				${clusterName} \
 				\
 				azure \
