@@ -34,7 +34,7 @@ deploy() {
 
 
 validate() {
-
+  true
 }
 
 destroy() {
