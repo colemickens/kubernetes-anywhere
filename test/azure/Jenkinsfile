@@ -5,7 +5,7 @@ import static java.util.UUID.randomUUID
 // TODO(general): this could be broken out so that the config step could be parameterized...
 //                so each provider can use whatever withEnv/Creds they want and populate '.config.json'
 
-def subscriptioId = '27b750cd-ed43-42fd-9044-8d75e124ae55'
+def subscriptionId = '27b750cd-ed43-42fd-9044-8d75e124ae55'
 def tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
 
 def dockerRepo = 'docker.io/colemickens'
@@ -35,7 +35,7 @@ node {
 
 	stage "deploy cluster"
 	kanyImg.inside() {
-		def config = getConfig(clusterName, ignitionTag, randomUUID() as String)
+		def config = getConfig(clusterName, tenantId, subscriptionId, ignitionTag, randomUUID() as String)
 		writeFile(file: '.config.json', text: config)
 		writeFile(file: 'config.json', text: config)
 
@@ -70,7 +70,7 @@ def cwd = { ->
     return readFile('pwd.current').trim()
 }
 
-def getConfig(clusterName, ignitionTag, azureMachinePassword) {
+def getConfig(clusterName, tenantId, subscriptionId, ignitionTag, azureMachinePassword) {
 	withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'azure_service_principal',
         usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET']]) {
 		def configTest = """
@@ -79,6 +79,8 @@ def getConfig(clusterName, ignitionTag, azureMachinePassword) {
 					"cluster_name": "${clusterName}",
 					"azure": {
 						"admin_password": "${azureMachinePassword}",
+						"tenant_id": "${tenantId}",
+						"subscription_id": "${subscriptionId}",
 						"client_id": "${env.AZURE_CLIENT_ID}",
 						"client_secret": "${env.AZURE_CLIENT_SECRET}"
 					}

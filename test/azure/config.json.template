@@ -1,7 +1,7 @@
 {
   "phase1": {
     "num_nodes": 1,
-    "cluster_name": "colemick-azk1",
+    "cluster_name": "",
     "cloud_provider": "azure",
     "azure": {
       "image_publisher": "canonical",
@@ -13,19 +13,19 @@
       "master_private_ip": "10.240.1.4",
       "location": "westus2",
       "admin_username": "kube",
-      "admin_password": "AzureKubernet3s!",
-      "tenant_id": "72f988bf-86f1-41af-91ab-2d7cd011db47",
-      "subscription_id": "27b750cd-ed43-42fd-9044-8d75e124ae55",
-      "client_id": "dad4f1ea-8934-4532-a42c-1de2d62d73b2",
-      "client_secret": "FaNaQKsnYKazC2v60TWtfRf+NhznLEYtydZpOTy21Dw=",
+      "admin_password": "",
+      "tenant_id": "",
+      "subscription_id": "",
+      "client_id": "",
+      "client_secret": "",
       "use_premium_storage": true,
       "use_ephemeral_drive": false
     }
   },
   "phase2": {
     "installer_container": "docker.io/colemickens/install-k8s:v2",
-    "docker_registry": "docker.io/colemickens",
-    "kubernetes_version": "colemick-azuredd"
+    "docker_registry": "gcr.io/google_containers",
+    "kubernetes_version": "v1.4.0-alpha.2"
   },
   "phase3": {
     "run_addons": true,
