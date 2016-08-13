@@ -5,9 +5,10 @@ import static java.util.UUID.randomUUID
 // TODO(general): this could be broken out so that the config step could be parameterized...
 //                so each provider can use whatever withEnv/Creds they want and populate '.config.json'
 
-def subscriptionId = '27b750cd-ed43-42fd-9044-8d75e124ae55'
-def tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
-def dockerRepo = 'docker.io/colemickens'
+subscriptionId = '27b750cd-ed43-42fd-9044-8d75e124ae55'
+tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
+dockerRepo = 'docker.io/colemickens'
+azureMachinePassword = randomUUID()
 
 node {
 	deleteDir()
