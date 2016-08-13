@@ -24,6 +24,17 @@ deploy() {
   
   # TODO: this dumps tfstate into ./azure/ rather than ./azure/.tmp/
   terraform apply -state=./.tmp/terraform.tfstate .tmp
+
+  while ! validate; do
+    sleep 5
+    export KUBECONFIG="$(pwd)/.tmp/kubeconfig.json"
+    kubectl get nodes
+  done
+}
+
+
+validate() {
+
 }
 
 destroy() {

@@ -7,7 +7,6 @@ import static java.util.UUID.randomUUID
 
 def subscriptionId = '27b750cd-ed43-42fd-9044-8d75e124ae55'
 def tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
-
 def dockerRepo = 'docker.io/colemickens'
 
 node {
@@ -40,11 +39,11 @@ node {
 		writeFile(file: '.config.json', text: config)
 		writeFile(file: 'config.json', text: config)
 
-		// intentionally suppressing the terraform build output
+		// intentionally suppressing some of the terraform build output
 		// because it's impossible to really hide the sp client_secret
 		sh("cd ./phase1/azure && ./do deploy | tee ./terraform.log | egrep -v 'custom_data|null_resource.kubeconfig|cert_pem|key_pem'")
+		archiveArtifacts artifacts: 'phase1/azure/.tmp/kubeconfig.json', fingerprint: true
 	}
-	archiveArtifacts artifacts: 'phase1/azure/.tmp/kubeconfig.json', fingerprint: true
 
 
 	stage 'test cluster'
@@ -60,47 +59,45 @@ node {
 	stage 'deploy cluster'
 	input 'destroy cluster?'
 	docker.inside() {
+		sh("make destroy")
 		//sh('make destroy')
 		echo 'make destroy'
 	}
 }
 
-def cwd = { ->
+def cwd() {
     sh 'pwd > pwd.current'
     return readFile('pwd.current').trim()
 }
 
 def getConfig(clusterName, tenantId, subscriptionId, ignitionTag, azureMachinePassword) {
 	withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'azure_service_principal',
-        usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET']]) {
-		def configTest = """
-			{
-				"phase1": {
-					"cluster_name": "${clusterName}",
-					"azure": {
-						"admin_password": "${azureMachinePassword}",
-						"tenant_id": "${tenantId}",
-						"subscription_id": "${subscriptionId}",
-						"client_id": "${env.AZURE_CLIENT_ID}",
-						"client_secret": "${env.AZURE_CLIENT_SECRET}"
+		usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET']]) {
+			def configTest = """
+				{
+					"phase1": {
+						"cluster_name": "${clusterName}",
+						"azure": {
+							"admin_password": "${azureMachinePassword}",
+							"tenant_id": "${tenantId}",
+							"subscription_id": "${subscriptionId}",
+							"client_id": "${env.AZURE_CLIENT_ID}",
+							"client_secret": "${env.AZURE_CLIENT_SECRET}"
+						}
+					},
+					"phase2": {
+						"installer_container": "${ignitionTag}"
 					}
-				},
-				"phase2": {
-					"installer_container": "${ignitionTag}"
 				}
-			}
-		""".trim()
+			""".trim()
 
 		writeFile(file: 'testconfig.json', text: configTest)
 
 		def configTemplatePath = 'test/azure/config.json.template'
 		def configTemplate = readFile('test/azure/config.json.template')
 		return sh (
-			//script: """echo "${configTemplate}" "${configTest}" | jq -r -s add""",
 			script: "jq -s '.[0] * .[1]' ${configTemplatePath} testconfig.json",
 			returnStdout: true
 		).trim()
 	}
 }
-
-// TODO(colemickens): paramterize the image name/push
