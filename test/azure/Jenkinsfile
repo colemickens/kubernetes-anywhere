@@ -10,6 +10,8 @@ import static java.util.UUID.randomUUID
 // TODO(general): this could be broken out so that the config step could be parameterized...
 //                so each provider can use whatever withEnv/Creds they want and populate '.config.json'
 
+latestReleaseUrl = "https://storage.googleapis.com/kubernetes-release/release/latest.txt"
+
 node {
 	deleteDir()
 	checkout scm
