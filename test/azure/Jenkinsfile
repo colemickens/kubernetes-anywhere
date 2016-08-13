@@ -41,7 +41,14 @@ node {
 		writeFile(file: 'config.json', text: config)
 		archiveArtifacts artifacts: 'config.json', fingerprint: true
 
-		sh("cd ./phase1/azure && ./do deploy")
+		/*sh("cd ./phase1/azure && ./do deploy")*/
+		sh("""
+			echo <<EOF \
+				test \
+				test \
+				test \
+			EOF | make deploy
+		""")
 		sh("cp ./phase1/azure/.tmp/kubeconfig.json ./kubeconfig.json")
 		archiveArtifacts artifacts: 'kubeconfig.json', fingerprint: true
 
