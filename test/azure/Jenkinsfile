@@ -1,3 +1,5 @@
+echo "test1"
+
 def kanyTag = 'docker.io/colemickens/k8s-ignition:${}'
 def ignitionTag = 'docker.io/colemickens/k8s-ignition:${BHASFASDF}'
 
@@ -41,7 +43,10 @@ def tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
 
 def clusterName = ''
 
+echo "Test2"
+
 node {
+	echo "test3"
 	scm checkout
 
 
