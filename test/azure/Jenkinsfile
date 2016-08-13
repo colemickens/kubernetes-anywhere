@@ -1,7 +1,7 @@
 import static java.util.UUID.randomUUID
 
-def kanyTag = 'docker.io/colemickens/k8s-ignition:${env.GIT_COMMIT}'
-def ignitionTag = 'docker.io/colemickens/k8s-ignition:${env.GIT_COMMIT}'
+def kanyTag = "docker.io/colemickens/k8s-ignition:${env.GIT_COMMIT}"
+def ignitionTag = "docker.io/colemickens/k8s-ignition:${env.GIT_COMMIT}"
 
 def cwd = { ->
     sh 'pwd > pwd.current'
