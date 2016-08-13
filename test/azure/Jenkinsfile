@@ -77,7 +77,7 @@ node {
 					${kubernetesVersion}\n\n\n\n
 			EOF""")
 
-			sh('cp .config.json config.json'
+			sh('cp .config.json config.json')
 			archiveArtifacts artifacts: 'config.json', fingerprint: true
 
 			sh("make deploy")
