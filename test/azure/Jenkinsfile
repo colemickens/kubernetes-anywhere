@@ -45,10 +45,10 @@ node {
 
 		//*sh("cd ./phase1/azure && ./do deploy")*/
 		sh("""set -x; \
-		cat <<-EOF | make deploy \
-				\n \
-				${clusterName} \n \
-				\n \
+		cat <<-EOF | make deploy
+				
+				${clusterName}
+				
 				azure \n \
 				\n \
 				\n \
