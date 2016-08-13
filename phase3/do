@@ -13,9 +13,10 @@ gen() {
 
 deploy() {
 	gen
-	mkdir -p /tmp/kubectl/schema
-	kubectl apply --schema-cache-directory=/tmp/kubectl/schema; -f ./.tmp/
+	mkdir -p /tmp/kubectl/
+	HOME=/tmp/kubectl kubectl apply -f ./.tmp/
 }
+
 
 case "${1:-}" in
   "")
