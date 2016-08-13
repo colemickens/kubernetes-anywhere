@@ -33,6 +33,9 @@ node {
 
 
 	stage "deploy cluster"
+	def config = getConfig("jenk8s-${env.GIT_COMMIT}", ignitionTag, azureMachinePassword)
+	writeFile('.config.json', config)
+	writeFile('config.json', config)
 	kanyImg.inside() {
 		//dir('phase1/azure') {
 		//	sh('bash ./do deploy')
