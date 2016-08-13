@@ -45,6 +45,9 @@ echo-config: .config.json
 deploy destroy: .config.json
 	$(MAKE) do WHAT=$@
 
+validate:
+	KUBECONFIG="$$(jq -r '.phase1.cloud_provider' .config.json)/.tmp/kubeconfig.json" ./util/validate
+
 do:
 	cat .config
 	( cd "phase1/$$(jq -r '.phase1.cloud_provider' .config.json)"; ./do $(WHAT) )
