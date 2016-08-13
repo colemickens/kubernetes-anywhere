@@ -4,7 +4,7 @@ num_nodes="$(cat ./.config.json | jq -r '.phase1.num_nodes')"
 
 while true; do
   sleep 5
-  hcount=$(kubectl get nodes | grep 'Ready' | wc -l)
+  hcount=$((kubectl get nodes || true) | grep 'Ready' | wc -l)
   if [[ "${hcount}" -lt "${num_nodes}" ]]; then
     echo "healthy nodes: wanted: ${node_count} actual:${hcount}"
     return -1

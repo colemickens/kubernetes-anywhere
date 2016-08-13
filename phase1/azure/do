@@ -24,27 +24,8 @@ deploy() {
   
   # TODO: this dumps tfstate into ./azure/ rather than ./azure/.tmp/
   terraform apply -state=./.tmp/terraform.tfstate .tmp
-
-  ls -al ./.tmp/
-  num_nodes="$(cat ./../../.config.json | jq -r '.phase1.num_nodes')"
-
-  while true; do
-    sleep 5
-    export KUBECONFIG="$(pwd)/.tmp/kubeconfig.json"
-    hcount=$(kubectl get nodes | grep 'Ready' | wc -l)
-    if [[ "${hcount}" -lt "${num_nodes}" ]]; then
-      echo "healthy nodes: wanted: ${node_count} actual:${hcount}"
-      return -1
-    else
-      return
-    fi
-  done
 }
 
-
-validate() {
-  true
-}
 
 destroy() {
   if [[ "${FORCE_DESTROY}" == "y" ]]; then

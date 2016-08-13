@@ -77,7 +77,7 @@ node {
 
 
 			start 'wait on cluster'
-			sh("make wait")
+			sh("make validate")
 
 
 			stage 'test cluster'
