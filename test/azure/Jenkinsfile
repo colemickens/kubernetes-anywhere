@@ -1,5 +1,8 @@
 import static java.util.UUID.randomUUID
 
+sh 'git rev-parse HEAD > commit'
+def commit = readFile('commit').trim()
+
 def kanyTag = "docker.io/colemickens/k8s-ignition:${env.GIT_COMMIT}"
 def ignitionTag = "docker.io/colemickens/k8s-ignition:${env.GIT_COMMIT}"
 
