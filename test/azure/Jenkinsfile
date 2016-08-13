@@ -41,7 +41,7 @@ node {
 
 		// intentionally suppressing some of the terraform build output
 		// because it's impossible to really hide the sp client_secret
-		sh("cd ./phase1/azure && ./do deploy")
+		sh("make do deploy")
 		dir('./phase1/azure/.tmp') {
 			archiveArtifacts artifacts: 'kubeconfig.json', fingerprint: true
 		}
@@ -58,7 +58,7 @@ node {
 
 		stage 'deploy cluster'
 		input 'destroy cluster?'
-		sh("make destroy")
+		sh("make do destroy")
 	}
 
 	def cwd() {
