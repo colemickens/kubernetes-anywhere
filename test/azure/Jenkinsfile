@@ -76,6 +76,10 @@ node {
 			archiveArtifacts artifacts: 'kubeconfig.json', fingerprint: true
 
 
+			start 'wait on cluster'
+			sh("make wait")
+
+
 			stage 'test cluster'
 			//input 'test cluster?'
 			withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
