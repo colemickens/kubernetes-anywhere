@@ -94,10 +94,8 @@ node {
 
 			if (testCluster=="y") {
 				stage 'test cluster'
-				//input 'test cluster?'
 				withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
-					echo 'make conformtest'
-					// make conformtest
+					make conformtest
 				}
 			}
 
