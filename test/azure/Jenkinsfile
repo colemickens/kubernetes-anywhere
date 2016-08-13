@@ -37,10 +37,6 @@ node {
 		def config = getConfig("jenk8s-${env.GIT_COMMIT}", ignitionTag, randomUUID() as String)
 		writeFile(file: '.config.json', text: config)
 		writeFile(file: 'config.json', text: config)
-		echo config
-		//dir('phase1/azure') {
-		//	sh('bash ./do deploy')
-		//}
 		sh('cd ./phase1/azure && ./do deploy')
 	}
 	archiveArtifacts artifacts: 'config.json', fingerprint: true
@@ -49,12 +45,12 @@ node {
 
 	stage 'test cluster'
 	input 'test cluster?'
+	withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
 	docker.inside() {
-		withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
 			echo 'make conformtest'
 			//make conformtest
-		}
 	}
+		}
 
 
 	stage 'deploy cluster'
