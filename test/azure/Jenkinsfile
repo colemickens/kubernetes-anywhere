@@ -71,11 +71,8 @@ node {
 				\
 				\
 				\
-			EOF"""
+		EOF""")
 
-
-			EOF | make deploy
-		""")
 		sh("cp ./phase1/azure/.tmp/kubeconfig.json ./kubeconfig.json")
 		archiveArtifacts artifacts: 'kubeconfig.json', fingerprint: true
 
