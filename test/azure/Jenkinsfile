@@ -7,6 +7,9 @@ import static java.util.UUID.randomUUID
 // - subscriptionId
 // - destroyCluster
 // - useEphemeralDrive
+// REQUIRED CREDENTIALS
+// - username/password
+//   - id: azure_service_principal
 // TODO(colemickens): paramterize the subscription, tenant id, etc
 
 // TODO(general): this could be broken out so that the config step could be parameterized...
