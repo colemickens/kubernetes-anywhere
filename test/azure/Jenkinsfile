@@ -16,8 +16,8 @@ node {
 	sh 'git rev-parse HEAD > commit'
 	env.GIT_COMMIT = readFile('commit').trim()
 
-	def kanyTag = "${dockerRepo}/k8s-ignition:${commit}"
-	def ignitionTag = "${dockerRepo}/k8s-ignition:${commit}"
+	def kanyTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}"
+	def ignitionTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}"
 
 	stage 'build phase2'
 	dir('phase2/ignition') {
