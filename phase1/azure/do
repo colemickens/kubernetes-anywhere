@@ -39,6 +39,11 @@ validate() {
 
 destroy() {
   terraform destroy .tmp
+  if [[ "${FORCE_DESTROY}" == "y" ]]; then
+    teraform destroy .tmp -force
+  else
+    terraform destroy .tmp
+  fi
 }
 
 case "${1:-}" in

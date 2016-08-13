@@ -56,7 +56,9 @@ node {
 
 		stage 'deploy cluster'
 		input 'destroy cluster?'
-		sh("cd ./phase1/azure && ./do destroy")
+		withEnv(["FORCE_DESTROY=true"]) {
+			sh("cd ./phase1/azure && ./do destroy")
+		}
 	}
 }
 
