@@ -1,0 +1,52 @@
+FROM alpine:3.4
+
+#ENV TERRAFORM_VERSION 0.7.0
+ENV TERRAFORM_VERSION 0.7.0-rc1
+ENV GLIBC_VERSION 2.23-r3
+
+RUN apk add --update wget ca-certificates unzip git bash && \
+    wget -q "https://github.com/andyshinn/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk" && \		
+    apk add --allow-untrusted glibc-${GLIBC_VERSION}.apk && \
+    wget -q -O /terraform.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
+    unzip /terraform.zip -d /bin && \
+    apk del --purge wget ca-certificates unzip && \
+    rm -rf /var/cache/apk/* /terraform.zip glibc-${GLIBC_VERSION}.apk
+
+RUN apk
+FROM ubuntu
+
+# Install basics
+RUN apt-get update && apt-get -y upgrade \
+    && apt-get install -y git curl vim jq libssl-dev openssl zip make sudo \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Terraform
+ENV TERRAFORM_VERSION 0.7.0-rc1
+RUN curl -sSL --fail \
+    "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" \
+    -o /tmp/tf.zip \
+    && unzip -d /usr/local/bin /tmp/tf.zip \
+    && rm /tmp/tf.zip
+
+# Azure - Required dependencies 
+RUN apt-get update && apt-get -y upgrade && \
+    apt-get install -y nodejs npm && \
+    rm -rf /var/lib/apt/lists/*
+RUN npm install -g azure-cli
+
+# Install Jsonnet
+# ENV JSONNET_GIT_TAG v0.8.8
+#     (too old - std.manifestJson is missing)
+ENV JSONNET_GIT_TAG master
+RUN cd /tmp \
+    && git clone https://github.com/google/jsonnet \
+    && cd jsonnet \
+    && git checkout ${JSONNET_GIT_TAG} \
+    && make \
+    && cp jsonnet /usr/bin/jsonnet
+
+WORKDIR /root/kubernetes-anywhere
+
+ADD . /root/kubernetes-anywhere/
+
+CMD make

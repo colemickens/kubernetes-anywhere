@@ -60,10 +60,8 @@ node {
 
 	stage 'deploy cluster'
 	input 'destroy cluster?'
-	docker.inside() {
+	kanyImg.inside() {
 		sh("make destroy")
-		//sh('make destroy')
-		echo 'make destroy'
 	}
 }
 
