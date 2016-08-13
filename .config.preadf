@@ -1,0 +1,45 @@
+#
+# Automatically generated file; DO NOT EDIT.
+# Kubernetes Minimal Turnup Configuration
+#
+
+#
+# Phase 1: Cluster Resource Provisioning
+#
+phase1.num_nodes=4
+phase1.instance_prefix="kubernetes"
+phase1.cloud_provider="azure"
+
+#
+# Azure configuration
+#
+phase1.azure.image_publisher="canonical"
+phase1.azure.image_offer="ubuntuserver"
+phase1.azure.image_sku="16.04.0-LTS"
+phase1.azure.image_version="latest"
+phase1.azure.master_vm_size="Standard_D1_v2"
+phase1.azure.node_vm_size="Standard_D1_v2"
+phase1.azure.master_private_ip="10.0.1.4"
+phase1.azure.location="westus"
+phase1.azure.admin_username="kube"
+phase1.azure.admin_password="AzureKubernet3s!"
+phase1.azure.tenant_id=""
+phase1.azure.subscription_id=""
+phase1.azure.client_id=""
+phase1.azure.client_secret=""
+
+#
+# Phase 2: Node Bootstrapping
+#
+phase2.installer_container="docker.io/colemickens/install-k8s:v1"
+phase2.docker_registry="gcr.io/google-containers"
+phase2.kubernetes_version="v1.2.4"
+
+#
+# Phase 3: Deploying Addons
+#
+phase3.run_addons=y
+phase3.kube_proxy=y
+phase3.dashboard=y
+phase3.heapster=y
+phase3.kube_dns=y

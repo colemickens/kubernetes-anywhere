@@ -35,18 +35,45 @@ node {
 
 
 	kanyImg.inside() {
+		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'azure_service_principal',
+
 		stage "deploy cluster"
 		def config = getConfig(clusterName, tenantId, subscriptionId, ignitionTag, randomUUID() as String)
 		writeFile(file: '.config.json', text: config)
 		writeFile(file: 'config.json', text: config)
 		archiveArtifacts artifacts: 'config.json', fingerprint: true
 
-		/*sh("cd ./phase1/azure && ./do deploy")*/
-		sh("""
-			echo <<EOF \
-				test \
-				test \
-				test \
+		//*sh("cd ./phase1/azure && ./do deploy")*/
+		sh("""cat <<-EOF | make do deploy \
+				${clusterName} \
+				${numNodes} \
+				azure \
+				\
+				\
+				\
+				\
+				\
+				\
+				\
+				westus2 \
+				\
+				${azureMachinePassword} \
+				${tenantId} \
+				${subscriptionId} \
+				${env.AZURE_CLIENT_ID} \
+				${env.AZURE_CLIENT_SECRET} \
+				${ignitionTag} \
+				gcr.io/google_containers \
+				v1.3.5 \
+				\
+				\
+				\
+				\
+				\
+				\
+			EOF"""
+
+
 			EOF | make deploy
 		""")
 		sh("cp ./phase1/azure/.tmp/kubeconfig.json ./kubeconfig.json")
@@ -66,6 +93,7 @@ node {
 		withEnv(["FORCE_DESTROY=true"]) {
 			sh("cd ./phase1/azure && ./do destroy")
 		}
+		}
 	}
 }
 
@@ -75,7 +103,6 @@ node {
 	}
 
 	def getConfig(clusterName, tenantId, subscriptionId, ignitionTag, azureMachinePassword) {
-		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'azure_service_principal',
 			usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET']]) {
 				def configTest = """
 					{
@@ -103,5 +130,4 @@ node {
 				script: "jq -s '.[0] * .[1]' ${configTemplatePath} testconfig.json",
 				returnStdout: true
 			).trim()
-		}
 	}
