@@ -45,12 +45,12 @@ node {
 
 	stage 'test cluster'
 	input 'test cluster?'
-	withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
-	docker.inside() {
+	kanyImg.inside() {
+		withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
 			echo 'make conformtest'
 			//make conformtest
-	}
 		}
+	}
 
 
 	stage 'deploy cluster'
