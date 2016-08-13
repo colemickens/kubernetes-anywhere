@@ -46,7 +46,7 @@ deploy destroy: .config.json
 	$(MAKE) do WHAT=$@
 
 do:
-	( cd "phase1/$$(jq -r '.phase1.cloud_provider' .config.json)"; ./do $(WHAT) )
+	( cd "phase1/$$(jq -r '.phase1.cloud_provider' .config.json)"; cat .config; ./do $(WHAT) )
 
 docker-build:
 	docker build -t $(IMAGE_NAME):$(IMAGE_VERSION) .
