@@ -87,7 +87,7 @@ node {
 		return readFile('pwd.current').trim()
 	}
 
-	def getConfig(clusterName, tenantId, subscriptionId, ignitionTag, azureMachinePassword) {
+	def getConfig() {
 				def configTest = """
 					{
 						"phase1": {
