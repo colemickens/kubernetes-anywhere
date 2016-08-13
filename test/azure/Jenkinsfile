@@ -54,7 +54,9 @@ node {
 				${subscriptionId}
 				${env.AZURE_CLIENT_ID}
 				${env.AZURE_CLIENT_SECRET}
-				${ignitionTag}\n\n\n\n\n
+				${ignitionTag}
+				gcr.io/google_containers
+				v1.4.0-alpha.2\n\n\n\n\n
 		EOF""")
 
 		sh("cp ./phase1/azure/.tmp/kubeconfig.json ./kubeconfig.json")
