@@ -13,7 +13,7 @@ node {
 	env.GIT_COMMIT = readFile('commit').trim()
 
 	if (clusterName == "") {
-		clusterName = "k8s-anywhere-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
+		clusterName = "k8s-any-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
 	}
 	if (azureMachinePassword == "") {
 		azureMachinePassword = randomUUID()
