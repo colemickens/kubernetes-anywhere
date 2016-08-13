@@ -8,7 +8,7 @@ import static java.util.UUID.randomUUID
 def subscriptioId = '27b750cd-ed43-42fd-9044-8d75e124ae55'
 def tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
 
-def docker_repo = 'docker.io/colemickens'
+def dockerRepo = 'docker.io/colemickens'
 
 node {
 	checkout scm
