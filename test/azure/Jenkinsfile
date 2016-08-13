@@ -32,9 +32,9 @@ node {
 
 
 	stage "deploy cluster"
-	def config = getConfig("jenk8s-${env.GIT_COMMIT}")
+	def config = getConfig "jenk8s-${env.GIT_COMMIT}"
 	writeFile(config, '.config.json')
-	writeFile(config, '.config.json')
+	writeFile(config, 'config.json')
 	kanyImg.inside() {
 		//sh('make deploy')
 		// TODO: make 'make deploy wait, then install addons automatically
