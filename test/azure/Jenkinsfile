@@ -17,10 +17,10 @@ node {
 	env.GIT_COMMIT = readFile('commit').trim()
 
 	if (clusterName == "") {
-		clusterName = "k8s-anywhere-${env.GIT_COMMIT}"
+		clusterName = "k8s-anywhere-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
 	}
-	def kanyTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}"
-	def ignitionTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}"
+	def kanyTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
+	def ignitionTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
 
 	stage 'build phase2'
 	dir('phase2/ignition') {
