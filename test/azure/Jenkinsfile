@@ -53,23 +53,24 @@ node {
 
 
 
-				\n \
-				westus2\n \
-				\n \
-				${azureMachinePassword} \n \
-				${tenantId} \n \
-				${subscriptionId} \n \
-				${env.AZURE_CLIENT_ID} \n \
-				${env.AZURE_CLIENT_SECRET} \n \
-				${ignitionTag} \n \
-				gcr.io/google_containers \n \
-				v1.3.5 \n \
-				\n \
-				\n \
-				\n \
-				\n \
-				\n \
-				\n \
+
+				westus2
+
+				${azureMachinePassword}
+				${tenantId}
+				${subscriptionId}
+				${env.AZURE_CLIENT_ID}
+				${env.AZURE_CLIENT_SECRET}
+				${ignitionTag}
+				gcr.io/google_containers
+				v1.3.5
+				
+				
+				
+				
+				
+				
+				
 		EOF""")
 
 		sh("cp ./phase1/azure/.tmp/kubeconfig.json ./kubeconfig.json")
