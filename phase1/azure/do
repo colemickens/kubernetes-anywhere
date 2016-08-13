@@ -15,6 +15,9 @@ gen() {
 
 deploy() {
   gen
+
+  # validate the config
+  # TODO: auto fix the storage account
   
   # Workaround: https://github.com/hashicorp/terraform/issues/7153
   terraform apply -state=./.tmp/terraform.tfstate .tmp || true

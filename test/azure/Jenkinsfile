@@ -15,7 +15,7 @@ node {
 	deleteDir()
 	checkout scm
 
-	sh 'git rev-parse HEAD > commit'
+	sh 'git rev-parse --short HEAD > commit'
 	env.GIT_COMMIT = readFile('commit').trim()
 
 	def kanyTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}"
