@@ -20,6 +20,7 @@ node {
 	}
 	def kanyTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
 	def ignitionTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
+	env.IGNITION_TAG = ignitionTag
 
 	stage 'build phase2'
 	dir('phase2/ignition') {
@@ -101,7 +102,7 @@ node {
 						}
 					},
 					"phase2": {
-						"installer_container": "${ignitionTag}"
+						"installer_container": "${env.IGNITION_TAG}"
 					}
 				}
 			""".trim()
