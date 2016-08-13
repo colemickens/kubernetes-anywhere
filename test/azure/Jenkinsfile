@@ -1,3 +1,89 @@
+def kanyTag = 'docker.io/colemickens/k8s-ignition:${}'
+def ignitionTag = 'docker.io/colemickens/k8s-ignition:${BHASFASDF}'
+
+def cwd = () => {
+    sh 'pwd > pwd.current'
+    return readFile('pwd.current').trim()
+}
+
+def getConfig = { ->
+	withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'azure_service_principal',
+        usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET']]) {
+		def configTest` = """
+			{
+				"phase1": {
+					"cluster_name": "${CLUSTER_NAME}",
+					"azure": {
+						"admin_password": "${AZURE_VM_PASSWORD}",
+						"client_id": "${AZURE_CLIENT_ID}",
+						"client_secret": "${AZURE_CLIENT_SECRET}"
+					}
+				},
+			}
+		""".stripIndent().trim()
+
+		def configTemplate = readFile('test/azure/config.json.template')
+		return sh (
+			script: """echo "${configTemplate}" "${configTest}" | jq -r -s add"""
+			returnStdout: true
+		).trim()
+	}
+}
+
+// TODO(colemickens): paramterize the image name/push
+// TODO(colemickens): paramterize the subscription, tenant id, etc
+
+// TODO(general): this could be broken out so that the config step could be parameterized...
+//                so each provider can use whatever withEnv/Creds they want and populate '.config.json'
+
+def subscriptioId = '27b750cd-ed43-42fd-9044-8d75e124ae55'
+def tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
+
+def clusterName = ''
+
 node {
-	echo "success"
+	scm checkout
+
+
+	stage 'build phase2'
+	dir('phase2/ignition') {
+		def ignitionImg = docker.build(ignitionTag, '--pull')
+		ignitionImg.push()
+	}
+
+
+	stage 'build kubernetes-anywhere'
+	def kanyImg = docker.build(kanyTag, '--pull')
+	kanyImg.push()
+
+
+	stage "deploy cluster"
+	def config = getConfig()
+	writeFile(config, '.config.json')
+	writeFile(config, '.config.json')
+	kanyImg.inside() {
+		//sh('make deploy')
+		// TODO: make 'make deploy wait, then install addons automatically
+		echo 'make deploy'
+	}
+	archiveArtifacts artifacts: 'config.json', fingerprint: true
+	archiveArtifacts artifacts: 'phase1/azure/.tmp/kubeconfig.json', fingerprint: true
+
+
+	stage 'test cluster'
+	input 'test cluster?'
+	docker.inside() {
+		withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
+			echo 'make conformtest'
+			//make conformtest
+		}
+	}
+
+
+	stage 'deploy cluster'
+	input 'destroy cluster?'
+	docker.inside() {
+		//sh('make destroy')
+		echo 'make destroy'
+	}
 }
