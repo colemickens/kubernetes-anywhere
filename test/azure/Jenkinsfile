@@ -1,3 +1,5 @@
+import static java.util.UUID.randomUUID 
+
 def kanyTag = 'docker.io/colemickens/k8s-ignition:${}'
 def ignitionTag = 'docker.io/colemickens/k8s-ignition:${BHASFASDF}'
 
@@ -7,16 +9,18 @@ def cwd = { ->
 }
 
 def getConfig = { ->
+	uuid = randomUUID() as String
+
 	withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'azure_service_principal',
         usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET']]) {
 		def configTest = """
 			{
 				"phase1": {
-					"cluster_name": "${CLUSTER_NAME}",
+					"cluster_name": "${clusterName}",
 					"azure": {
-						"admin_password": "${AZURE_VM_PASSWORD}",
-						"client_id": "${AZURE_CLIENT_ID}",
-						"client_secret": "${AZURE_CLIENT_SECRET}"
+						"admin_password": "${azureVmPassword}",
+						"client_id": "${env.AZURE_CLIENT_ID}",
+						"client_secret": "${env.AZURE_CLIENT_SECRET}"
 					}
 				},
 			}
@@ -43,7 +47,6 @@ def clusterName = ''
 
 node {
 	checkout scm
-
 
 	stage 'build phase2'
 	dir('phase2/ignition') {
