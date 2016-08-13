@@ -30,7 +30,7 @@ RUN cd /tmp \
     && make \
     && cp jsonnet /usr/bin/jsonnet
 
-ENV KUBECTL_VERSION v1.4.0-alpha.2
+ENV KUBECTL_VERSION "v1.3.0"
 RUN curl -sSL --fail \
     "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" \
         >/usr/local/bin/kubectl \
