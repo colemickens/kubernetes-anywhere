@@ -60,4 +60,4 @@ docker run \
   -v /run:/run \
   -v /etc/kubernetes:/etc/kubernetes \
   -v /var/lib/ignition:/usr/share/oem \
-  "${installer_container}"
+  "$installer_container"
