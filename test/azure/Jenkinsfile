@@ -42,7 +42,7 @@ node {
 		// intentionally suppressing some of the terraform build output
 		// because it's impossible to really hide the sp client_secret
 		sh("cd ./phase1/azure && ./do deploy")
-		dir('./phase1/azure/.tmp/kubeconfig.json') {
+		dir('./phase1/azure/.tmp') {
 			archiveArtifacts artifacts: 'kubeconfig.json', fingerprint: true
 		}
 	}
