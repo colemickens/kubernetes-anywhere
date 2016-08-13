@@ -18,7 +18,7 @@ node {
 	if (azureMachinePassword == "") {
 		azureMachinePassword = randomUUID()
 	}
-	def kanyTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
+	def kanyTag = "${dockerRepo}/k8s-anywhere:${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
 	def ignitionTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
 	env.IGNITION_TAG = ignitionTag
 
