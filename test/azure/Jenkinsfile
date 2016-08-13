@@ -41,7 +41,7 @@ node {
 
 		// intentionally suppressing some of the terraform build output
 		// because it's impossible to really hide the sp client_secret
-		sh("cd ./phase1/azure && ./do deploy | tee ./terraform.log | egrep -v 'custom_data|null_resource.kubeconfig|cert_pem|key_pem'")
+		sh("cd ./phase1/azure && ./do deploy'")
 		archiveArtifacts artifacts: 'phase1/azure/.tmp/kubeconfig.json', fingerprint: true
 	}
 
