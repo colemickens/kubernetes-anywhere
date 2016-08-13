@@ -34,11 +34,15 @@ node {
 
 
 	kanyImg.inside() {
-		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'azure_service_principal',
-			usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET']]) {
+		withCredentials([[
+			$class: 'UsernamePasswordMultiBinding',
+			credentialsId: 'azure_service_principal',
+			usernameVariable: 'AZURE_CLIENT_ID',
+			passwordVariable: 'AZURE_CLIENT_SECRET']])
+	{
 
 		stage "deploy cluster"
-		def config = getConfig(clusterName, tenantId, subscriptionId, ignitionTag, randomUUID() as String)
+		def config = getConfig()
 		writeFile(file: '.config.json', text: config)
 		writeFile(file: 'config.json', text: config)
 		archiveArtifacts artifacts: 'config.json', fingerprint: true
