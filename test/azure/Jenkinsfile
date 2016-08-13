@@ -34,7 +34,7 @@ node {
 
 	stage "deploy cluster"
 	kanyImg.inside() {
-		def config = getConfig("jenk8s-${env.GIT_COMMIT}", ignitionTag, randomUUID as String)
+		def config = getConfig("jenk8s-${env.GIT_COMMIT}", ignitionTag, randomUUID() as String)
 		writeFile(file: '.config.json', text: config)
 		writeFile(file: 'config.json', text: config)
 		echo config
