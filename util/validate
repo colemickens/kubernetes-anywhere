@@ -7,7 +7,7 @@ set -x
 
 echo $KUBECONFIG
 
-num_nodes="$(cat ./.config.json | jq -r '.phase1.num_nodes')"
+num_nodes="(( $(cat ./.config.json | jq -r '.phase1.num_nodes') + 1 ))"
 
 while true; do
   hcount=$(kubectl get nodes | grep 'Ready' | wc -l) || true

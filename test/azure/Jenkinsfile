@@ -5,6 +5,7 @@ import static java.util.UUID.randomUUID
 // - kubernetesVerison (optional) (default to value of: https://storage.googleapis.com/kubernetes-release/release/latest.txt)
 // - tenantId
 // - subscriptionId
+// - destroyCluster
 // TODO(colemickens): paramterize the subscription, tenant id, etc
 
 // TODO(general): this could be broken out so that the config step could be parameterized...
@@ -91,18 +92,21 @@ node {
 			sh("make addons")
 
 
-			stage 'test cluster'
-			//input 'test cluster?'
-			withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
-				echo 'make conformtest'
-				// make conformtest
+			if (testCluster=="y") {
+				stage 'test cluster'
+				//input 'test cluster?'
+				withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
+					echo 'make conformtest'
+					// make conformtest
+				}
 			}
 
-
-			stage 'destroy cluster'
-			input 'destroy cluster?'
-			withEnv(["FORCE_DESTROY=y"]) {
-				sh("cd ./phase1/azure && ./do destroy")
+			if (destroyCluster=="y") {
+				stage 'destroy cluster'
+				input 'destroy cluster?'
+				withEnv(["FORCE_DESTROY=y"]) {
+					sh("cd ./phase1/azure && ./do destroy")
+				}
 			}
 		}
 	}
