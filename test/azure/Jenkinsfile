@@ -1,10 +1,66 @@
 import static java.util.UUID.randomUUID
 
-sh 'git rev-parse HEAD > commit'
-def commit = readFile('commit').trim()
+// TODO(colemickens): paramterize the subscription, tenant id, etc
 
-def kanyTag = "docker.io/colemickens/k8s-ignition:${env.GIT_COMMIT}"
-def ignitionTag = "docker.io/colemickens/k8s-ignition:${env.GIT_COMMIT}"
+// TODO(general): this could be broken out so that the config step could be parameterized...
+//                so each provider can use whatever withEnv/Creds they want and populate '.config.json'
+
+def subscriptioId = '27b750cd-ed43-42fd-9044-8d75e124ae55'
+def tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
+
+def docker_repo = 'docker.io/colemickens'
+
+node {
+	checkout scm
+
+	sh 'git rev-parse HEAD > commit'
+	env.GIT_COMMIT = readFile('commit').trim()
+
+	def kanyTag = "${dockerRepo}/k8s-ignition:${commit}"
+	def ignitionTag = "${dockerRepo}/k8s-ignition:${commit}"
+
+	stage 'build phase2'
+	dir('phase2/ignition') {
+		def ignitionImg = docker.build(ignitionTag, '--pull')
+		ignitionImg.push()
+	}
+
+
+	stage 'build kubernetes-anywhere'
+	def kanyImg = docker.build(kanyTag, '--pull')
+	kanyImg.push()
+
+
+	stage "deploy cluster"
+	def config = getConfig("jenk8s-${env.GIT_COMMIT}")
+	writeFile(config, '.config.json')
+	writeFile(config, '.config.json')
+	kanyImg.inside() {
+		//sh('make deploy')
+		// TODO: make 'make deploy wait, then install addons automatically
+		echo 'make deploy'
+	}
+	archiveArtifacts artifacts: 'config.json', fingerprint: true
+	archiveArtifacts artifacts: 'phase1/azure/.tmp/kubeconfig.json', fingerprint: true
+
+
+	stage 'test cluster'
+	input 'test cluster?'
+	docker.inside() {
+		withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
+			echo 'make conformtest'
+			//make conformtest
+		}
+	}
+
+
+	stage 'deploy cluster'
+	input 'destroy cluster?'
+	docker.inside() {
+		//sh('make destroy')
+		echo 'make destroy'
+	}
+}
 
 def cwd = { ->
     sh 'pwd > pwd.current'
@@ -38,58 +94,3 @@ def getConfig = { ->
 }
 
 // TODO(colemickens): paramterize the image name/push
-// TODO(colemickens): paramterize the subscription, tenant id, etc
-
-// TODO(general): this could be broken out so that the config step could be parameterized...
-//                so each provider can use whatever withEnv/Creds they want and populate '.config.json'
-
-def subscriptioId = '27b750cd-ed43-42fd-9044-8d75e124ae55'
-def tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
-
-def clusterName = 'jenk8s-${GITCOMMIT}'
-
-node {
-	checkout scm
-
-	stage 'build phase2'
-	dir('phase2/ignition') {
-		def ignitionImg = docker.build(ignitionTag, '--pull')
-		ignitionImg.push()
-	}
-
-
-	stage 'build kubernetes-anywhere'
-	def kanyImg = docker.build(kanyTag, '--pull')
-	kanyImg.push()
-
-
-	stage "deploy cluster"
-	def config = getConfig()
-	writeFile(config, '.config.json')
-	writeFile(config, '.config.json')
-	kanyImg.inside() {
-		//sh('make deploy')
-		// TODO: make 'make deploy wait, then install addons automatically
-		echo 'make deploy'
-	}
-	archiveArtifacts artifacts: 'config.json', fingerprint: true
-	archiveArtifacts artifacts: 'phase1/azure/.tmp/kubeconfig.json', fingerprint: true
-
-
-	stage 'test cluster'
-	input 'test cluster?'
-	docker.inside() {
-		withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
-			echo 'make conformtest'
-			//make conformtest
-		}
-	}
-
-
-	stage 'deploy cluster'
-	input 'destroy cluster?'
-	docker.inside() {
-		//sh('make destroy')
-		echo 'make destroy'
-	}
-}
