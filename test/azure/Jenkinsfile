@@ -9,7 +9,7 @@ def cwd = { ->
 def getConfig = { ->
 	withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'azure_service_principal',
         usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET']]) {
-		def configTest` = """
+		def configTest = """
 			{
 				"phase1": {
 					"cluster_name": "${CLUSTER_NAME}",
