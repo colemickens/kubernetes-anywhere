@@ -23,7 +23,7 @@ node {
 		kubernetesVersion = sh(script: "curl ${latestReleaseUrl}", returnStdout: true)
 	}
 	if (clusterName == "") {
-		clusterName = "k8s-any-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
+		clusterName = "k8s-any-${env.BUILD_NUMBER}-${env.GIT_COMMIT}"
 	}
 	if (azureMachinePassword == "") {
 		azureMachinePassword = randomUUID()
