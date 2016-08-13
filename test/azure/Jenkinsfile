@@ -32,8 +32,8 @@ node {
 	kanyImg.push()
 
 
-	stage "deploy cluster"
 	kanyImg.inside() {
+		stage "deploy cluster"
 		def config = getConfig(clusterName, tenantId, subscriptionId, ignitionTag, randomUUID() as String)
 		writeFile(file: '.config.json', text: config)
 		writeFile(file: 'config.json', text: config)
@@ -45,42 +45,38 @@ node {
 		dir('./phase1/azure/.tmp') {
 			archiveArtifacts artifacts: 'kubeconfig.json', fingerprint: true
 		}
-	}
 
 
-	stage 'test cluster'
-	input 'test cluster?'
-	kanyImg.inside() {
+		stage "deploy cluster"
+		stage 'test cluster'
+		input 'test cluster?'
 		withEnv(['KUBECONFIG=' + cwd() + '/phase1/azure/.tmp/kubeconfig.json']) {
 			echo 'make conformtest'
 			//make conformtest
 		}
-	}
 
 
-	stage 'deploy cluster'
-	input 'destroy cluster?'
-	kanyImg.inside() {
+		stage 'deploy cluster'
+		input 'destroy cluster?'
 		sh("make destroy")
 	}
-}
 
-def cwd() {
-    sh 'pwd > pwd.current'
-    return readFile('pwd.current').trim()
-}
+	def cwd() {
+		sh 'pwd > pwd.current'
+		return readFile('pwd.current').trim()
+	}
 
-def getConfig(clusterName, tenantId, subscriptionId, ignitionTag, azureMachinePassword) {
-	withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'azure_service_principal',
-		usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET']]) {
-			def configTest = """
-				{
-					"phase1": {
-						"cluster_name": "${clusterName}",
-						"azure": {
-							"admin_password": "${azureMachinePassword}",
-							"tenant_id": "${tenantId}",
-							"subscription_id": "${subscriptionId}",
+	def getConfig(clusterName, tenantId, subscriptionId, ignitionTag, azureMachinePassword) {
+		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'azure_service_principal',
+			usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET']]) {
+				def configTest = """
+					{
+						"phase1": {
+							"cluster_name": "${clusterName}",
+							"azure": {
+								"admin_password": "${azureMachinePassword}",
+								"tenant_id": "${tenantId}",
+								"subscription_id": "${subscriptionId}",
 							"client_id": "${env.AZURE_CLIENT_ID}",
 							"client_secret": "${env.AZURE_CLIENT_SECRET}"
 						}
