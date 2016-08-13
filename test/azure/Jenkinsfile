@@ -7,7 +7,7 @@ import static java.util.UUID.randomUUID
 
 def subscriptioId = '27b750cd-ed43-42fd-9044-8d75e124ae55'
 def tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
-def azureMachinePassword = 'P@ssw0rdRes3t' // TODO: not ok
+def azureMachinePassword = 'P@ssw0rdRes3t'
 
 def dockerRepo = 'docker.io/colemickens'
 
@@ -34,7 +34,9 @@ node {
 
 	stage "deploy cluster"
 	kanyImg.inside() {
-		sh('make deploy')
+		dir('phase1/azure') {
+			sh('./do.sh deploy')
+		}
 	}
 	archiveArtifacts artifacts: 'config.json', fingerprint: true
 	archiveArtifacts artifacts: 'phase1/azure/.tmp/kubeconfig.json', fingerprint: true
