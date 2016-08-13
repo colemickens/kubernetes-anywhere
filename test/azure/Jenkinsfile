@@ -48,7 +48,6 @@ node {
 		cat <<-EOF | make deploy
 				
 				${clusterName}
-				
 				azure \n \
 				\n \
 				\n \
@@ -73,6 +72,8 @@ node {
 				\n \
 				\n \
 		EOF""")
+
+		sh("cat .config")
 
 		sh("cp ./phase1/azure/.tmp/kubeconfig.json ./kubeconfig.json")
 		archiveArtifacts artifacts: 'kubeconfig.json', fingerprint: true
