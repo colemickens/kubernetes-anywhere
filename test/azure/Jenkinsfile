@@ -33,7 +33,7 @@ node {
 
 
 	stage "deploy cluster"
-	def config = getConfig "jenk8s-${env.GIT_COMMIT}" ignitionTag azureMachinePassword
+	def config = getConfig("jenk8s-${env.GIT_COMMIT}", ignitionTag, azureMachinePassword)
 	writeFile(config, '.config.json')
 	writeFile(config, 'config.json')
 	kanyImg.inside() {
