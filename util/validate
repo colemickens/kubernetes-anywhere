@@ -1,14 +1,16 @@
 #!/bin/bash
 
+set -o errexit
+set -o pipefail
+set -o nounset
+set -x
+
 num_nodes="$(cat ./.config.json | jq -r '.phase1.num_nodes')"
 
 while true; do
-  sleep 5
   hcount=$((kubectl get nodes || true) | grep 'Ready' | wc -l)
-  if [[ "${hcount}" -lt "${num_nodes}" ]]; then
-    echo "healthy nodes: wanted: ${node_count} actual:${hcount}"
-    return -1
-  else
-    return
-  fi
+  [[ "${hcount}" -ge "${num_nodes}" ]] && exit
+
+  echo "healthy nodes: wanted: ${num_nodes} actual:${hcount}"
+  sleep 5
 done
