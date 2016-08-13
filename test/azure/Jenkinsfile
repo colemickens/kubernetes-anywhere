@@ -1,7 +1,7 @@
-import static java.util.UUID.randomUUID 
+import static java.util.UUID.randomUUID
 
-def kanyTag = 'docker.io/colemickens/k8s-ignition:${}'
-def ignitionTag = 'docker.io/colemickens/k8s-ignition:${BHASFASDF}'
+def kanyTag = 'docker.io/colemickens/k8s-ignition:${env.GIT_COMMIT}'
+def ignitionTag = 'docker.io/colemickens/k8s-ignition:${env.GIT_COMMIT}'
 
 def cwd = { ->
     sh 'pwd > pwd.current'
@@ -43,7 +43,7 @@ def getConfig = { ->
 def subscriptioId = '27b750cd-ed43-42fd-9044-8d75e124ae55'
 def tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
 
-def clusterName = ''
+def clusterName = 'jenk8s-${GITCOMMIT}'
 
 node {
 	checkout scm
