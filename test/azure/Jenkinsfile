@@ -17,6 +17,7 @@ node {
 	sh 'git rev-parse --short HEAD > commit'
 	env.GIT_COMMIT = readFile('commit').trim()
 
+	def clusterName = "k8s-anywhere-${env.GIT_COMMIT}"
 	def kanyTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}"
 	def ignitionTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}"
 
@@ -34,10 +35,13 @@ node {
 
 	stage "deploy cluster"
 	kanyImg.inside() {
-		def config = getConfig("jenk8s-${env.GIT_COMMIT}", ignitionTag, randomUUID() as String)
+		def config = getConfig(clusterName, ignitionTag, randomUUID() as String)
 		writeFile(file: '.config.json', text: config)
 		writeFile(file: 'config.json', text: config)
-		sh('cd ./phase1/azure && ./do deploy')
+
+		// intentionally suppressing the terraform build output
+		// because it's impossible to really hide the sp client_secret
+		sh("cd ./phase1/azure && ./do deploy | tee ./terraform.log | egrep -v 'custom_data|null_resource.kubeconfig'")
 	}
 	archiveArtifacts artifacts: 'config.json', fingerprint: true
 	archiveArtifacts artifacts: 'phase1/azure/.tmp/kubeconfig.json', fingerprint: true
