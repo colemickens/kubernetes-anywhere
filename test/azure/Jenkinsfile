@@ -59,6 +59,7 @@ node {
 		input 'destroy cluster?'
 		sh("make do destroy")
 	}
+}
 
 	def cwd() {
 		sh 'pwd > pwd.current'
@@ -95,4 +96,3 @@ node {
 			returnStdout: true
 		).trim()
 	}
-}
