@@ -13,7 +13,7 @@ gen() {
 
 deploy() {
 	gen
-	kubectl apply -f ./.tmp/
+	kubectl apply -f ./.tmp/all.json
 }
 
 case "${1:-}" in
