@@ -48,10 +48,10 @@ node {
 		//*sh("cd ./phase1/azure && ./do deploy")*/
 		sh("""set -x; \
 		cat <<-EOF | make deploy \
-				${clusterName} \
-				\
-				azure \
-				\
+				${clusterName}\n \
+				\n \
+				azure\n \
+				\n \
 				\
 				\
 				\
@@ -88,7 +88,7 @@ node {
 		//}
 
 
-		stage 'deploy cluster'
+		stage 'destroy cluster'
 		input 'destroy cluster?'
 		withEnv(["FORCE_DESTROY=true"]) {
 			sh("cd ./phase1/azure && ./do destroy")
