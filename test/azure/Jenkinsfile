@@ -86,14 +86,14 @@ node {
 					}
 				}
 			""".trim()
+
+			writeFile(file: 'testconfig.json', text: configTest)
+
+			def configTemplatePath = 'test/azure/config.json.template'
+			def configTemplate = readFile('test/azure/config.json.template')
+			return sh (
+				script: "jq -s '.[0] * .[1]' ${configTemplatePath} testconfig.json",
+				returnStdout: true
+			).trim()
 		}
-
-		writeFile(file: 'testconfig.json', text: configTest)
-
-		def configTemplatePath = 'test/azure/config.json.template'
-		def configTemplate = readFile('test/azure/config.json.template')
-		return sh (
-			script: "jq -s '.[0] * .[1]' ${configTemplatePath} testconfig.json",
-			returnStdout: true
-		).trim()
 	}
