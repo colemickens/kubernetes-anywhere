@@ -46,10 +46,10 @@ deploy destroy: .config.json
 	$(MAKE) do WHAT=$@
 
 validate:
-	KUBECONFIG="$$(jq -r '.phase1.cloud_provider' .config.json)/.tmp/kubeconfig.json" ./util/validate
+	KUBECONFIG="$$(pwd)/phase1/$$(jq -r '.phase1.cloud_provider' .config.json)/.tmp/kubeconfig.json" ./util/validate
 
 addons:
-	KUBECONFIG="$$(jq -r '.phase1.cloud_provider' .config.json)/.tmp/kubeconfig.json" ./phase3/do deploy
+	KUBECONFIG="$$(pwd)/phase1/$$(jq -r '.phase1.cloud_provider' .config.json)/.tmp/kubeconfig.json" ./phase3/do deploy
 
 do:
 	cat .config

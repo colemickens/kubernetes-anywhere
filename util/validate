@@ -5,6 +5,8 @@ set -o pipefail
 set -o nounset
 set -x
 
+echo $KUBECONFIG
+
 num_nodes="$(cat ./.config.json | jq -r '.phase1.num_nodes')"
 
 while true; do
