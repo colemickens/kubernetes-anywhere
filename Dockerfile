@@ -30,6 +30,9 @@ RUN cd /tmp \
     && make \
     && cp jsonnet /usr/bin/jsonnet
 
+ENV KUBECTL_VERSION v1.4.0-alpha.2
+RUN curl "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" > /usr/bin/local/kubectl && chmod +x /usr/bin/local/kubectl
+
 WORKDIR /root/kubernetes-anywhere
 
 ADD . /root/kubernetes-anywhere/
