@@ -76,7 +76,7 @@ node {
 			archiveArtifacts artifacts: 'kubeconfig.json', fingerprint: true
 
 
-			start 'wait on cluster'
+			stage 'wait on cluster'
 			sh("make validate")
 
 
