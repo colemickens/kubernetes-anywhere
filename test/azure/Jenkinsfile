@@ -85,7 +85,7 @@ def getConfig(clusterName, ignitionTag, azureMachinePassword) {
 					"installer_container": "${ignitionTag}"
 				}
 			}
-		""".stripIndent().trim()
+		""".trim()
 
 		def configTemplate = readFile('test/azure/config.json.template')
 		return sh (
