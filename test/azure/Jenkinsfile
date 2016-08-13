@@ -67,7 +67,7 @@ def cwd = { ->
     return readFile('pwd.current').trim()
 }
 
-def getConfig() = () { ->
+def getConfig() = (clusterName) { ->
 	uuid = randomUUID() as String
 
 	withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'azure_service_principal',
