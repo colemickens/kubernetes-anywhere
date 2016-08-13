@@ -34,9 +34,6 @@ node {
 
 	stage "deploy cluster"
 	kanyImg.inside() {
-	def config = getConfig("jenk8s-${env.GIT_COMMIT}-${env.BUILD_NUMBER}", ignitionTag, azureMachinePassword)
-	writeFile(config, '.config.json')
-	writeFile(config, 'config.json')
 		//sh('make deploy')
 		// TODO: make 'make deploy wait, then install addons automatically
 		echo 'make deploy'
@@ -87,9 +84,13 @@ def getConfig(clusterName, ignitionTag, azureMachinePassword) {
 			}
 		""".trim()
 
+		writeFile(configTest, 'testconfig.json')
+
+		def configTemplatePath = 'test/azure/config.json.template'
 		def configTemplate = readFile('test/azure/config.json.template')
 		return sh (
-			script: """echo "${configTemplate}" "${configTest}" | jq -r -s add""",
+			//script: """echo "${configTemplate}" "${configTest}" | jq -r -s add""",
+			script: "jq -s '.[0] * .[1]' testconfig.json ${configTemplatePath} > config.json"
 			returnStdout: true
 		).trim()
 	}
