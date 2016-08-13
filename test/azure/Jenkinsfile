@@ -35,14 +35,16 @@ node {
 	stage "deploy cluster"
 	kanyImg.inside() {
 		def config = getConfig(clusterName, tenantId, subscriptionId, ignitionTag, randomUUID() as String)
-		archiveArtifacts artifacts: 'config.json', fingerprint: true
 		writeFile(file: '.config.json', text: config)
 		writeFile(file: 'config.json', text: config)
+		archiveArtifacts artifacts: 'config.json', fingerprint: true
 
 		// intentionally suppressing some of the terraform build output
 		// because it's impossible to really hide the sp client_secret
 		sh("cd ./phase1/azure && ./do deploy'")
-		archiveArtifacts artifacts: 'phase1/azure/.tmp/kubeconfig.json', fingerprint: true
+		dir('./phase1/azure/.tmp/kubeconfig.json') {
+			archiveArtifacts artifacts: 'kubeconfig.json', fingerprint: true
+		}
 	}
 
 
