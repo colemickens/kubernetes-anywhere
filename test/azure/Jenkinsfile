@@ -5,11 +5,6 @@ import static java.util.UUID.randomUUID
 // TODO(general): this could be broken out so that the config step could be parameterized...
 //                so each provider can use whatever withEnv/Creds they want and populate '.config.json'
 
-subscriptionId = '27b750cd-ed43-42fd-9044-8d75e124ae55'
-tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
-dockerRepo = 'docker.io/colemickens'
-azureMachinePassword = randomUUID()
-
 node {
 	deleteDir()
 	checkout scm
@@ -19,6 +14,9 @@ node {
 
 	if (clusterName == "") {
 		clusterName = "k8s-anywhere-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
+	}
+	if (azureMachinePassword == "") {
+		azureMachinePassword = randomUUID
 	}
 	def kanyTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
 	def ignitionTag = "${dockerRepo}/k8s-ignition:${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
