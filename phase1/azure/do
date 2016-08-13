@@ -39,9 +39,9 @@ validate() {
 
 destroy() {
   if [[ "${FORCE_DESTROY}" == "y" ]]; then
-    terraform destroy -force .tmp
+    terraform destroy -state=./.tmp/terraform.tfstate -force .tmp
   else
-    terraform destroy .tmp
+    terraform destroy -state=./.tmp/terraform.tfstate .tmp
   fi
 }
 
