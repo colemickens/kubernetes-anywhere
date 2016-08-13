@@ -78,7 +78,7 @@ def getConfig(clusterName) {
 				"phase1": {
 					"cluster_name": "${clusterName}",
 					"azure": {
-						"admin_password": "${azureVmPassword}",
+						"admin_password": "${azureMachinePassword}",
 						"client_id": "${env.AZURE_CLIENT_ID}",
 						"client_secret": "${env.AZURE_CLIENT_SECRET}"
 					}
