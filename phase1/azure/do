@@ -26,7 +26,7 @@ deploy() {
   terraform apply -state=./.tmp/terraform.tfstate .tmp
 
   ls -al ./.tmp/
-  num_nodes="$(cat ./.tmp/.config.json | jq -r '.phase1.num_nodes')"
+  num_nodes="$(cat ./../../.config.json | jq -r '.phase1.num_nodes')"
 
   while true; do
     sleep 5
