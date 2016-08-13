@@ -7,7 +7,6 @@ import static java.util.UUID.randomUUID
 
 def subscriptioId = '27b750cd-ed43-42fd-9044-8d75e124ae55'
 def tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
-def azureMachinePassword = 'P@ssw0rdRes3t'
 
 def dockerRepo = 'docker.io/colemickens'
 
@@ -35,7 +34,7 @@ node {
 
 	stage "deploy cluster"
 	kanyImg.inside() {
-		def config = getConfig("jenk8s-${env.GIT_COMMIT}", ignitionTag, azureMachinePassword)
+		def config = getConfig("jenk8s-${env.GIT_COMMIT}", ignitionTag, randomUUID as String)
 		writeFile(file: '.config.json', text: config)
 		writeFile(file: 'config.json', text: config)
 		echo config
