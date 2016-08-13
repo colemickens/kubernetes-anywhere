@@ -86,6 +86,7 @@ node {
 					}
 				}
 			""".trim()
+		}
 
 		writeFile(file: 'testconfig.json', text: configTest)
 
