@@ -61,3 +61,6 @@ docker run \
   -v /etc/kubernetes:/etc/kubernetes \
   -v /var/lib/ignition:/usr/share/oem \
   "$installer_container"
+
+systemctl enable kubelet
+systemctl start kubelet
